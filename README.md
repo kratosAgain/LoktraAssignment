@@ -9,4 +9,8 @@
    Command format    
    "python Shopping.py <search_tag> <page_tag>"       
   "python Shopping.py <search_tag>"
+  
+  
+3- Document Classfication Question (Data Scientist)      
+   Document.py   (Input format is same as described in question)
    
