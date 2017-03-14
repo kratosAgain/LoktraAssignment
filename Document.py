@@ -12,7 +12,7 @@ import argparse
 #Thank You
 
 class learning(object):
-    #list of common stop words picked up from source from google (also used stop_words library which is currently commented out
+    #list of common stop words picked up from a source from google (also used stop_words library which is currently commented out
     stop = ['a',
                     'about',
                     'above',
@@ -245,14 +245,11 @@ class learning(object):
                 wordGivenClass[cls] = l
 
         #now finding out probabilities of each word
-
-
         for i in range (1,9):
             self.classProb[i] = float(classFreq[str(i)])/clsCount
 
         #print(self.classProb)
         #print(sum(classProb))
-
         for word,freq in wordFreq.iteritems():
             self.wordProb[word] = float(freq)/wordCount
             for i in range (1,9):
@@ -260,8 +257,6 @@ class learning(object):
                 count =  l.count(word)
                 newKey = word + str(i)
                 self.wordGivenClassProb[newKey] = float(count)/len(l)
-
-
 
         #print(self.wordProb)
         #print("done")
@@ -271,8 +266,6 @@ class learning(object):
 
    #function to classify the test case
     def test(self,case):
-
-
         words = case.split()
         maxProb = 0.0
         maxclass = 1
@@ -296,12 +289,7 @@ class learning(object):
 
 
 
-# stop = get_stop_words('english')
-# for word in stop:
-#     print (word)
-
-
-
+#Taking input from user
 n = int(input())
 inputList = []
 for i in range(0,n):
