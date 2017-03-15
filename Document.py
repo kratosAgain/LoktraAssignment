@@ -5,12 +5,6 @@ import argparse
 
 
 
-#disclaimer : I hope this program is working fine in terms of functionality, but it is taking an awful lot of time,
-#as I am new to python and is in transition period of fully converting from java to python, I am still not aware of
-#full potential and availability of various data structures of python, but I think that I can do better, so I would
-#try tommarow to make it more time efficient.
-#Thank You
-
 class learning(object):
     #list of common stop words picked up from a source from google (also used stop_words library which is currently commented out
     stop = ['a',
@@ -190,9 +184,9 @@ class learning(object):
 
     wordProb = dict() #to store the word probabilities
     classProb = dict() #to store class probabilites
-    wordGivenClassProb = dict() #to store probability of a word given a class, key would be in format of word+class, for example
+    wordGivenClass = dict() #to store number of times a word appear in a class, key would be in format of word+class, for example
                                 # word = "book" , mapped to class 4, then unique key of this dictionary would be "book4"
-
+    wordsInClass = dict() #number of words in each class
 
     def __init__(self,fileName):
         self.fileName = fileName
@@ -218,7 +212,8 @@ class learning(object):
         #print(lines[0])
 
         for i in range (1,9):
-            wordGivenClass[str(i)]=[]
+            self.wordGivenClass[str(i)]=[]
+            self.wordsInClass[str(i)] = 0
 
         #print(wordGivenClass)
         for line in lines:
@@ -231,7 +226,7 @@ class learning(object):
                 classFreq[cls] = 1
 
             for word in words:
-                if word in self.stop or len(word)<3:
+                if word in self.stop :
                     continue
                 wordCount = wordCount + 1
                 word = word.lower()
@@ -240,9 +235,13 @@ class learning(object):
                     wordFreq[word] = wordFreq[word]+1
                 else:
                     wordFreq[word]=1
-                l = wordGivenClass[cls]
-                l.append(word)
-                wordGivenClass[cls] = l
+                key = word+cls
+                self.wordsInClass[cls]+=1
+                if key in self.wordGivenClass:
+                    self.wordGivenClass[key]+=1
+                else:
+                    self.wordGivenClass[key]=1
+
 
         #now finding out probabilities of each word
         for i in range (1,9):
@@ -252,11 +251,6 @@ class learning(object):
         #print(sum(classProb))
         for word,freq in wordFreq.iteritems():
             self.wordProb[word] = float(freq)/wordCount
-            for i in range (1,9):
-                l = wordGivenClass[str(i)]
-                count =  l.count(word)
-                newKey = word + str(i)
-                self.wordGivenClassProb[newKey] = float(count)/len(l)
 
         #print(self.wordProb)
         #print("done")
@@ -274,13 +268,14 @@ class learning(object):
             currentprob=1
             for word in words:
                 word = word.lower()
-                if word in self.stop or len(word)<3:
+                if word in self.stop:
                     continue
                 if word not in self.wordProb:
                     continue
 
                 key = str(word) + str(i)       #using bayes theorem to find the probability
-                currentprob = currentprob*(self.wordGivenClassProb[key] / self.wordProb[word])
+                if key in self.wordGivenClass:
+                    currentprob = currentprob*(float(self.wordGivenClass[key])/self.wordsInClass[str(i)] / self.wordProb[word])
             currentprob = currentprob*self.classProb[(i)]
             if maxProb < currentprob:
                 maxProb = currentprob
