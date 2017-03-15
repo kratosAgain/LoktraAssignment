@@ -208,8 +208,6 @@ class learning(object):
 
         wordFreq=dict() #for storing the frequency of each word
         classFreq=dict() #storing frequency of each class 1-8
-        wordGivenClass=dict() #storing all words occuring in a class
-        #print(lines[0])
 
         for i in range (1,9):
             self.wordGivenClass[str(i)]=[]
